@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_sales" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dbe285ea-552a-4797-a8ed-8c3cec56eea1">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FF8C00">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFE2BF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#FF8C00">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFE2BF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#FF8C00">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#FFE2BF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#FF8C00">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#FFE2BF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="TableSalesDataSet" uuid="4dfe9d0e-370d-40c6-bc70-00247df7853a">
+		<parameter name="DSP_FirstDate" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="DSP_SecondDate" class="java.util.Date">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT cedula , nombres , sum(cantidad_producto) as total_vendido
+FROM
+(
+SELECT cedula , nombres , codigo, codigo_factura , codigo_producto, cantidad_producto ,fecha_compra
+FROM Vendedores
+INNER JOIN Pedidos_facturas ON cedula = vendedor_cedula
+INNER JOIN Det_pedidos ON codigo =  codigo_factura
+WHERE fecha_compra BETWEEN $P{DSP_FirstDate} AND $P{DSP_SecondDate}
+) AS Tabla_ventas
+GROUP BY cedula
+ORDER BY total_vendido DESC;]]>
+		</queryString>
+		<field name="cedula" class="java.math.BigDecimal">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="nombres" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="total_vendido" class="java.math.BigDecimal"/>
+		<group name="cedula">
+			<groupExpression><![CDATA[$F{cedula}]]></groupExpression>
+		</group>
+		<group name="nombres">
+			<groupExpression><![CDATA[$F{nombres}]]></groupExpression>
+		</group>
+		<group name="total_vendido">
+			<groupExpression><![CDATA[$F{total_vendido}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="FirstDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SecondDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT cedula , nombres , max(total_vendido) as mayor_numero_ventas
+FROM
+(
+SELECT cedula , nombres , sum(cantidad_producto) as total_vendido
+FROM
+    (
+    SELECT cedula , nombres , codigo, codigo_factura , codigo_producto, cantidad_producto ,fecha_compra
+    FROM Vendedores
+    INNER JOIN Pedidos_facturas ON cedula = vendedor_cedula
+    INNER JOIN Det_pedidos ON codigo =  codigo_factura
+	WHERE fecha_compra BETWEEN $P{FirstDate} AND $P{SecondDate}
+    ) AS Tabla_ventas
+GROUP BY cedula
+ORDER BY total_vendido DESC
+) AS Tabla_total_ventas;]]>
+	</queryString>
+	<field name="cedula" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombres" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="mayor_numero_ventas" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="74" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="0" y="0" width="555" height="74" forecolor="#FFFFFF" backcolor="#000000" uuid="ad4aa87f-449e-42f2-9232-1862b3ce0739"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="14" y="1" width="530" height="73" forecolor="#FF6600" uuid="eb33ee45-c099-4ec6-bef6-bdbcbb457677"/>
+				<textElement textAlignment="Center">
+					<font fontName="Broadway" size="54"/>
+				</textElement>
+				<text><![CDATA[Sales Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="138" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="428" y="7" width="100" height="20" uuid="cd2cf437-894a-488d-ba75-27f5af7d07e9"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="318" height="136" uuid="fa7881fb-4b87-4e44-95d0-d21c9644118a"/>
+				<imageExpression><![CDATA["C:\\Users\\simon\\Documents\\JasperReports-Designer\\sold.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="0" y="136" width="555" height="1" uuid="c147b37b-037d-433b-a50d-0ab2fe71f768"/>
+			</line>
+			<staticText>
+				<reportElement x="318" y="7" width="110" height="20" forecolor="#FF6600" uuid="f591db02-4185-4bbc-976d-4bab0d945d1e"/>
+				<textElement>
+					<font fontName="Broadway" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATE REPORT:]]></text>
+			</staticText>
+			<rectangle radius="10">
+				<reportElement x="428" y="44" width="116" height="81" uuid="35c7eef2-3779-4b73-a094-062cd88ef8f6"/>
+			</rectangle>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="435" y="55" width="100" height="20" uuid="c50c1a1d-7791-4c54-8daa-27f7ed5ea5bd"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{FirstDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="468" y="75" width="30" height="20" forecolor="#FF6600" uuid="8ac068cb-7626-4876-a316-bc4c99388f33"/>
+				<textElement>
+					<font fontName="Broadway" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AND]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="435" y="95" width="100" height="20" uuid="1d5eb304-3dfb-4b9d-bfcf-e576aeb3966b"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{SecondDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="318" y="65" width="110" height="30" forecolor="#FF6600" uuid="68016c66-1d57-4397-b63e-14dd67293a9f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Broadway" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALES REPORT BETWEEN:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="421" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table 3" style="table 3" x="167" y="12" width="331" height="140" uuid="ad70d1c8-3c74-417a-be92-bf536ebaee60"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="TableSalesDataSet" uuid="4abb526f-2fc8-4aea-9f93-7a4ee2105463">
+						<datasetParameter name="DSP_FirstDate">
+							<datasetParameterExpression><![CDATA[$P{FirstDate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="DSP_SecondDate">
+							<datasetParameterExpression><![CDATA[$P{SecondDate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="48fb2d01-7433-41dc-85da-5b27440addec">
+						<jr:columnHeader style="table 3_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="c4cc6ad4-6e22-4128-b73d-293d6c2835d0"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[ID]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 3_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="7307e053-53c5-423f-bbcb-ff78fb7729d2"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{cedula}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="1b828fc9-654a-42dd-ae8c-f37a3ddcd8ee">
+						<jr:columnHeader style="table 3_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="3393f9fd-c2a1-4e18-bbed-f7b2feac1d24"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[NAME]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 3_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="92af79be-30b8-49c6-9233-f42e550e5d50"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="4795756a-59ab-4ad1-884c-dc7434643968">
+						<jr:columnHeader style="table 3_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="2dbd1b1d-bbea-440b-ae44-bddeb92eac67"/>
+								<textElement textAlignment="Center"/>
+								<text><![CDATA[TOTAL SOLD]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 3_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="b2da3bc9-5958-4736-a39a-d67e02f097e4"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{total_vendido}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<barChart>
+				<chart>
+					<reportElement x="0" y="202" width="534" height="219" uuid="a6f9bcc3-660c-495a-8aa2-660f0d531561"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Top"/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="TableSalesDataSet" uuid="1464b5e8-7660-4792-b060-61de3355b846">
+							<datasetParameter name="DSP_FirstDate">
+								<datasetParameterExpression><![CDATA[$P{FirstDate}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="DSP_SecondDate">
+								<datasetParameterExpression><![CDATA[$P{SecondDate}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{nombres}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{nombres}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{total_vendido}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot orientation="Horizontal"/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement x="200" y="25" width="100" height="20" uuid="29235dbf-2e52-41ea-8b32-00abbc41543c"/>
+				<textFieldExpression><![CDATA[$F{nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="25" width="140" height="20" uuid="7185738e-7489-4f96-b40a-89b90a99cdb0"/>
+				<textFieldExpression><![CDATA[$F{mayor_numero_ventas}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="25" width="200" height="20" forecolor="#FF6600" uuid="19f06b0f-1809-4ec7-a585-97a8d863aeae"/>
+				<textElement>
+					<font fontName="Broadway" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[THE BEST SALESPERSON IS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="318" y="25" width="97" height="20" forecolor="#FF6600" uuid="cf5dfcf7-c7c1-4546-91e8-708537adf877"/>
+				<textElement>
+					<font fontName="Broadway" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL SOLD:]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="34" splitType="Stretch">
+			<textField>
+				<reportElement x="435" y="14" width="80" height="20" uuid="368a2209-857c-41f0-84b2-e5ce3d0d9a8e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="14" width="40" height="20" uuid="3f38ccd8-1db5-44d0-994a-555fec1a5f7a"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

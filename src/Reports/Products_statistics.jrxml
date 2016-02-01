@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StadProds_byType_report" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b40691d5-399d-4d6b-b02e-966a2e2a72da">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="60"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="product_type" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT nombre , total
+FROM
+(
+   SELECT nombre , sum(cantidad_producto) as total , tipo
+   FROM Productos
+   INNER JOIN Det_pedidos  ON Productos.codigo = codigo_producto
+   INNER JOIN Pedidos_facturas ON Pedidos_facturas.codigo = codigo_factura
+   WHERE tipo = $P{product_type}
+   GROUP BY codigo_producto
+) AS Table_shopping
+ORDER BY total DESC;]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total" class="java.math.BigDecimal"/>
+	<variable name="total_shopping" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="0" y="0" width="752" height="79" backcolor="#000000" uuid="102678a9-68dd-4080-88d9-a2c7b4314277"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="25" y="13" width="703" height="66" forecolor="#FF6600" uuid="5e343881-dffb-4e3a-950a-3820b5a22bc1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Broadway" size="48"/>
+				</textElement>
+				<text><![CDATA[Products Statistic  By Type]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="111" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="12" width="108" height="98" uuid="104e214a-058a-4246-b0e1-ead45bc70772"/>
+				<imageExpression><![CDATA["C:\\Users\\simon\\Documents\\JasperReports-Designer\\sold.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="604" y="90" width="48" height="20" uuid="d86aa605-e1bb-4f88-9a8d-072e4686cc50"/>
+				<text><![CDATA[DATE:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="652" y="90" width="100" height="20" uuid="2e1cd85b-a6a2-4a18-9bf7-f73085d3360b"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="110" width="752" height="1" uuid="bc2bd862-002b-45e1-9b79-046b80a75f37"/>
+			</line>
+			<textField pattern="###0.00">
+				<reportElement x="268" y="44" width="275" height="67" forecolor="#FF6600" uuid="af0636b8-d3d8-4237-affc-d143403dcf67"/>
+				<textElement>
+					<font fontName="Broadway" size="26" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{product_type}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="229" splitType="Stretch">
+			<stackedBarChart>
+				<chart>
+					<reportElement x="119" y="0" width="485" height="187" uuid="a9e51e9e-0b8f-4f6b-844e-3e889af4aaef"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{nombre}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{nombre}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{total}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</stackedBarChart>
+			<staticText>
+				<reportElement x="650" y="189" width="102" height="20" forecolor="#000000" uuid="92508894-25d0-4298-8f09-7eac2e76b123"/>
+				<text><![CDATA[TOTAL SHOPPING]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="652" y="209" width="100" height="20" uuid="bef0bcb7-1a0f-4673-9195-ec5e32e89aaa"/>
+				<textFieldExpression><![CDATA[$V{total_shopping}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report3" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="91c987f1-8511-4d97-bf70-745c4f4300e5">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="98"/>
+	<parameter name="param_code_bill" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT codigo_factura, nombre , cantidad_producto , valor_por_cantidad , fecha_compra
+FROM det_pedidos INNER JOIN productos ON codigo_producto = productos.codigo
+	 INNER JOIN pedidos_facturas ON codigo_factura = pedidos_facturas.codigo
+WHERE codigo_factura = $P{param_code_bill};]]>
+	</queryString>
+	<field name="codigo_factura" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cantidad_producto" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_por_cantidad" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha_compra" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="cantidad_producto_1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad_producto}]]></variableExpression>
+	</variable>
+	<variable name="valor_por_cantidad_1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_por_cantidad}]]></variableExpression>
+	</variable>
+	<variable name="valor_por_cantidad_2" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_por_cantidad}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="21" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="120" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="333" y="11" width="200" height="77" forecolor="#0033CC" uuid="1ae1552e-3e13-457d-ae16-043af4cc57c3"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="355" y="25" width="37" height="20" uuid="91da87d7-11e8-4d0a-afbe-2e93658b7960"/>
+				<text><![CDATA[DATE:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement x="392" y="25" width="103" height="20" forecolor="#CC0000" uuid="251ebe21-21c0-41b8-bd81-54f9323158b3"/>
+				<textFieldExpression><![CDATA[$F{fecha_compra}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="355" y="55" width="62" height="20" uuid="2a3d7b8d-8bf7-4235-bbea-dbe8b17c1db4"/>
+				<text><![CDATA[CODE BILL: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="417" y="55" width="93" height="20" forecolor="#CC0000" uuid="9ce79a0a-144e-4035-b9a0-7a8f64ec9f63"/>
+				<textFieldExpression><![CDATA[$F{codigo_factura}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="17" y="0" width="316" height="120" uuid="e5b3e87a-a10b-4573-be1f-45c3439ad393"/>
+				<imageExpression><![CDATA["C:\\Users\\simon\\Documents\\JasperReports-Designer\\Sold.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="27" y="22" width="95" height="20" forecolor="#003399" uuid="3538df23-e5a8-4b44-b342-d2b15051ec4c"/>
+				<text><![CDATA[PRODUCT NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="203" y="22" width="130" height="20" forecolor="#000099" uuid="3453054b-783c-46a1-8d0a-ccac7d06544b"/>
+				<text><![CDATA[REQUIRED QUANTITY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="355" y="22" width="171" height="20" forecolor="#000099" uuid="85eb1865-ffbc-427d-98a5-69375c21a8ec"/>
+				<text><![CDATA[ VALUE BY REQUIRED QUANTITY]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="27" y="0" width="88" height="20" uuid="d209bdb3-03a9-4435-95b8-07b3f9968d06"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="203" y="0" width="113" height="20" uuid="00fc9774-7a44-4916-971f-297435135a3c"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{cantidad_producto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="382" y="0" width="121" height="20" uuid="3c0a2229-dfe5-4240-afee-7c32df737387"/>
+				<textFieldExpression><![CDATA[$F{valor_por_cantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="104" splitType="Stretch">
+			<staticText>
+				<reportElement x="263" y="24" width="100" height="20" forecolor="#0000CC" uuid="bc420de9-d4c9-4983-b8bd-11552c5b55d2"/>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="263" y="64" width="100" height="20" forecolor="#000099" uuid="28241f63-e94a-47f8-ad61-72954c22ad30"/>
+				<text><![CDATA[TOTAL IVA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="263" y="44" width="123" height="20" uuid="fc1d1dea-23fc-4468-b2ef-3738254994e0"/>
+				<textFieldExpression><![CDATA[$V{valor_por_cantidad_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="263" y="84" width="292" height="20" uuid="42234f59-65f2-484d-aaf5-442d529cf7c9"/>
+				<textFieldExpression><![CDATA[$V{valor_por_cantidad_2}+($V{valor_por_cantidad_2}*0.16)]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="53" splitType="Stretch">
+			<textField>
+				<reportElement x="430" y="33" width="80" height="20" uuid="2c10baca-7758-4f3a-aa3b-46bc1b0499f3"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="33" width="40" height="20" uuid="3fa6b1db-d16c-41e3-954a-c1bd7e78db12"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
